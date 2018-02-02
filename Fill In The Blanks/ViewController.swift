@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Cartography
 
 class ViewController: UIViewController {
     @IBOutlet weak var textfield: UITextField!
@@ -28,7 +29,7 @@ class ViewController: UIViewController {
         collectionView.dataSource = self
 
         let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
-        layout.estimatedItemSize = CGSize(width: 150, height: 50)
+        layout.estimatedItemSize = CGSize(width: 10, height: 50)
     }
 
     override func didReceiveMemoryWarning() {
@@ -55,10 +56,16 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
         if blanks.contains(indexPath.row) {
             cell.label.isHidden = true
             cell.textField.isHidden = false
+            constrain(cell.textField) { field in
+                field.width == 100
+            }
         } else {
             cell.label.text = words[indexPath.row]
             cell.textField.isHidden = true
             cell.label.isHidden = false
+            constrain(cell.textField, cell.label) { field, label in
+//                field.width == label.width
+            }
         }
         return cell
     }

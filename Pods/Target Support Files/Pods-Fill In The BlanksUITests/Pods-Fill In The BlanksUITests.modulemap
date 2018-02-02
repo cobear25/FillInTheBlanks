@@ -1,0 +1,6 @@
+framework module Pods_Fill_In_The_BlanksUITests {
+  umbrella header "Pods-Fill In The BlanksUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}
