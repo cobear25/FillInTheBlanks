@@ -14,6 +14,12 @@
 		C3EBE4A320113F9400B44006 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C3EBE4A120113F9400B44006 /* LaunchScreen.storyboard */; };
 		C3EBE4AE20113F9500B44006 /* Fill_In_The_BlanksTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EBE4AD20113F9500B44006 /* Fill_In_The_BlanksTests.swift */; };
 		C3EBE4B920113F9500B44006 /* Fill_In_The_BlanksUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EBE4B820113F9500B44006 /* Fill_In_The_BlanksUITests.swift */; };
+		C3EBE4C720113FBC00B44006 /* MessageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EBE4C620113FBC00B44006 /* MessageManager.swift */; };
+		C3EBE4C820113FBC00B44006 /* MessageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EBE4C620113FBC00B44006 /* MessageManager.swift */; };
+		C3EBE4CB20114EB400B44006 /* WordCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EBE4C920114EB400B44006 /* WordCollectionViewCell.swift */; };
+		C3EBE4CC20114EB400B44006 /* WordCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EBE4C920114EB400B44006 /* WordCollectionViewCell.swift */; };
+		C3EBE4CD20114EB400B44006 /* WordCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3EBE4CA20114EB400B44006 /* WordCollectionViewCell.xib */; };
+		C3EBE4CE20114EB400B44006 /* WordCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3EBE4CA20114EB400B44006 /* WordCollectionViewCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +53,9 @@
 		C3EBE4B420113F9500B44006 /* Fill In The BlanksUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Fill In The BlanksUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3EBE4B820113F9500B44006 /* Fill_In_The_BlanksUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fill_In_The_BlanksUITests.swift; sourceTree = "<group>"; };
 		C3EBE4BA20113F9500B44006 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C3EBE4C620113FBC00B44006 /* MessageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageManager.swift; sourceTree = "<group>"; };
+		C3EBE4C920114EB400B44006 /* WordCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordCollectionViewCell.swift; sourceTree = "<group>"; };
+		C3EBE4CA20114EB400B44006 /* WordCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WordCollectionViewCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +112,9 @@
 				C3EBE49F20113F9400B44006 /* Assets.xcassets */,
 				C3EBE4A120113F9400B44006 /* LaunchScreen.storyboard */,
 				C3EBE4A420113F9500B44006 /* Info.plist */,
+				C3EBE4C620113FBC00B44006 /* MessageManager.swift */,
+				C3EBE4C920114EB400B44006 /* WordCollectionViewCell.swift */,
+				C3EBE4CA20114EB400B44006 /* WordCollectionViewCell.xib */,
 			);
 			path = "Fill In The Blanks";
 			sourceTree = "<group>";
@@ -234,6 +246,7 @@
 			files = (
 				C3EBE4A320113F9400B44006 /* LaunchScreen.storyboard in Resources */,
 				C3EBE4A020113F9400B44006 /* Assets.xcassets in Resources */,
+				C3EBE4CD20114EB400B44006 /* WordCollectionViewCell.xib in Resources */,
 				C3EBE49E20113F9400B44006 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -242,6 +255,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C3EBE4CE20114EB400B44006 /* WordCollectionViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -259,7 +273,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C3EBE4C720113FBC00B44006 /* MessageManager.swift in Sources */,
 				C3EBE49B20113F9400B44006 /* ViewController.swift in Sources */,
+				C3EBE4CB20114EB400B44006 /* WordCollectionViewCell.swift in Sources */,
 				C3EBE49920113F9400B44006 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -268,7 +284,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C3EBE4CC20114EB400B44006 /* WordCollectionViewCell.swift in Sources */,
 				C3EBE4AE20113F9500B44006 /* Fill_In_The_BlanksTests.swift in Sources */,
+				C3EBE4C820113FBC00B44006 /* MessageManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
