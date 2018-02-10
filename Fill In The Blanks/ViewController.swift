@@ -10,26 +10,19 @@ import UIKit
 import Cartography
 
 class ViewController: UIViewController {
-    @IBOutlet weak var textfield: UITextField!
-    @IBOutlet weak var collectionView: UICollectionView!
-    var words: [String] = []
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var messageLabel: UILabel!
+    var sentence: String = ""
     var blanks: [Int] = []
+    var textFields: [UITextField] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        let (words, blanks) = MessageManager.blankOutMessage(message: "This is the voice. ", count: 1)
-//        MessageManager.blankOutMessage(message: "I know that, that's wrong!  ", count: 2)
-//        MessageManager.blankOutMessage(message: " When, I, am , good.", count: 3)
-//        MessageManager.blankOutMessage(message: "a n sad fdsa;afd fd!@3", count: 4)
-//        MessageManager.blankOutMessage(message: "the end", count: 5)
-//        print(words)
 
-        collectionView.register(UINib.init(nibName: "WordCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "cell")
-        collectionView.delegate = self
-        collectionView.dataSource = self
-
-        let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
-        layout.estimatedItemSize = CGSize(width: 10, height: 50)
+        tableView.register(UINib.init(nibName: "WordTableViewCell", bundle: nil), forCellReuseIdentifier: "cell")
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.separatorStyle = .none
     }
 
     override func didReceiveMemoryWarning() {
@@ -38,40 +31,48 @@ class ViewController: UIViewController {
     }
 
     @IBAction func sendTapped(_ sender: Any) {
-        self.words = []
-        self.blanks = []
-        collectionView.reloadData()
-        let (words, blanks) = MessageManager.blankOutMessage(message: textfield.text ?? "", count: 2)
-        self.words = words
-        self.blanks = blanks
-        collectionView.reloadData()
+        var canProceed = true
+        var newWords: [String] = []
+        for field in textFields {
+            if field.text!.isEmpty {
+                canProceed = false
+            }
+            newWords.append(field.text!)
+        }
+        if canProceed {
+            textFields.forEach { $0.text = "" }
+            let sentenceToCreate = MessageManager.newSentence(oldSentence: messageLabel.text ?? "", blanks: self.blanks, newWords: newWords)
+            let (sentence, blanks) = MessageManager.blankOutMessage(message: sentenceToCreate, count: 2)
+            self.sentence = sentence
+            self.blanks = blanks
+            textFields.removeAll()
+            tableView.reloadData()
+            messageLabel.text = sentence
+        }
     }
     
 }
 
-extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! WordCollectionViewCell
-        if blanks.contains(indexPath.row) {
-            cell.label.isHidden = true
-            cell.textField.isHidden = false
-            constrain(cell.textField) { field in
-                field.width == 100
-            }
-        } else {
-            cell.label.text = words[indexPath.row]
-            cell.textField.isHidden = true
-            cell.label.isHidden = false
-            constrain(cell.textField, cell.label) { field, label in
-//                field.width == label.width
-            }
-        }
+extension ViewController: UITableViewDataSource, UITableViewDelegate {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! WordTableViewCell
+        cell.textField.characterLimit = 25
+        textFields.append(cell.textField)
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return words.count
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.blanks.count
+    }
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return UIView()
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 50
     }
 }
 

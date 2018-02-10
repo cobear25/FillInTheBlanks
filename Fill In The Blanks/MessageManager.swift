@@ -10,9 +10,9 @@ import UIKit
 
 class MessageManager: NSObject {
     
-    static func blankOutMessage(message: String, count: Int) -> ([String], [Int]) {
+    static func blankOutMessage(message: String, count: Int) -> (String, [Int]) {
         let newString = message.trimmingCharacters(in: .whitespacesAndNewlines)
-        let words = newString.components(separatedBy: .whitespaces)
+        var words = newString.components(separatedBy: .whitespaces)
         var indexesUsed: [Int] = []
         var newCount = count
         // Prevent the loop from never ending by setting the count to the length of the string if too long.
@@ -25,10 +25,30 @@ class MessageManager: NSObject {
                 indexesUsed.append(Int(index))
             }
         }
+        for index in indexesUsed {
+            words[index] = "_____"
+        }
         print(words)
         print(indexesUsed)
+        let newSentence = words.reduce(into: "") { (result, string) in
+            result += " \(string)"
+        }
 
-        return (words, indexesUsed)
+        return (newSentence.trimmingCharacters(in: .whitespaces), indexesUsed.sorted())
+    }
+    
+    static func newSentence(oldSentence: String, blanks: [Int], newWords: [String]) -> String {
+        let newString = oldSentence.trimmingCharacters(in: .whitespacesAndNewlines)
+        var words = newString.components(separatedBy: .whitespaces)
+        var _newWords = newWords
+        for index in blanks {
+            words[index] = _newWords[0]
+            _newWords = Array(_newWords[1...])
+        }
+        let newSentence = words.reduce(into: "") { (result, string) in
+            result += " \(string)"
+        }
+        return newSentence
     }
 
 }
