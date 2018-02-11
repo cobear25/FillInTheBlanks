@@ -7,10 +7,11 @@
 //
 
 import UIKit
+import Foundation
 
 class MessageManager: NSObject {
     
-    static func blankOutMessage(message: String, count: Int) -> (String, [Int]) {
+    static func blankOutMessage(message: String, count: Int) -> (NSAttributedString, [Int]) {
         let newString = message.trimmingCharacters(in: .whitespacesAndNewlines)
         var words = newString.components(separatedBy: .whitespaces)
         var indexesUsed: [Int] = []
@@ -30,11 +31,37 @@ class MessageManager: NSObject {
         }
         print(words)
         print(indexesUsed)
-        let newSentence = words.reduce(into: "") { (result, string) in
-            result += " \(string)"
+        let attributedString = NSMutableAttributedString(string: "")
+        for (index, word) in words.enumerated() {
+            if word == "_____" {
+                attributedString.append(NSAttributedString(string: word + (index == words.count ? "" : " "), attributes: [NSAttributedStringKey.foregroundColor: UIColor.blue]))
+            } else {
+                attributedString.append(NSAttributedString(string: word + (index == words.count ? "" : " ")))
+            }
         }
 
-        return (newSentence.trimmingCharacters(in: .whitespaces), indexesUsed.sorted())
+        return (attributedString, indexesUsed.sorted())
+    }
+    
+    static func sentenceWithNewWords(realSentence: String, blanks: [Int], newWords: [String]) -> NSAttributedString {
+        let words = realSentence.components(separatedBy: .whitespaces)
+        let attributedString = NSMutableAttributedString(string: "")
+        var nextNewWord = 0
+        for (index, word) in words.enumerated() {
+            var colored = false
+            var string = word
+            if blanks.contains(index) {
+                colored = true
+                string = newWords[nextNewWord]
+                nextNewWord += 1
+            }
+            if colored {
+                attributedString.append(NSAttributedString(string: string + (index == words.count ? "" : " "), attributes: [NSAttributedStringKey.foregroundColor: UIColor.blue]))
+            } else {
+                attributedString.append(NSAttributedString(string: string + (index == words.count ? "" : " ")))
+            }
+        }
+        return attributedString
     }
     
     static func newSentence(oldSentence: String, blanks: [Int], newWords: [String]) -> String {
@@ -50,5 +77,4 @@ class MessageManager: NSObject {
         }
         return newSentence
     }
-
 }
