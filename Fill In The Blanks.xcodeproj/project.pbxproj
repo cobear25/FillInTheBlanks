@@ -13,6 +13,7 @@
 		A30F8998202D261C00748E22 /* WordTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30F8996202D261C00748E22 /* WordTableViewCell.swift */; };
 		A30F8999202D261C00748E22 /* WordTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A30F8997202D261C00748E22 /* WordTableViewCell.xib */; };
 		A30F899B202E74B400748E22 /* CMTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30F899A202E74B400748E22 /* CMTextField.swift */; };
+		A30F899D20301B7B00748E22 /* UIColor+CM.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30F899C20301B7B00748E22 /* UIColor+CM.swift */; };
 		C3EBE49920113F9400B44006 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EBE49820113F9400B44006 /* AppDelegate.swift */; };
 		C3EBE49B20113F9400B44006 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EBE49A20113F9400B44006 /* ViewController.swift */; };
 		C3EBE49E20113F9400B44006 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C3EBE49C20113F9400B44006 /* Main.storyboard */; };
@@ -21,7 +22,6 @@
 		C3EBE4AE20113F9500B44006 /* Fill_In_The_BlanksTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EBE4AD20113F9500B44006 /* Fill_In_The_BlanksTests.swift */; };
 		C3EBE4B920113F9500B44006 /* Fill_In_The_BlanksUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EBE4B820113F9500B44006 /* Fill_In_The_BlanksUITests.swift */; };
 		C3EBE4C720113FBC00B44006 /* MessageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EBE4C620113FBC00B44006 /* MessageManager.swift */; };
-		C3EBE4C820113FBC00B44006 /* MessageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EBE4C620113FBC00B44006 /* MessageManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +53,7 @@
 		A30F8996202D261C00748E22 /* WordTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordTableViewCell.swift; sourceTree = "<group>"; };
 		A30F8997202D261C00748E22 /* WordTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WordTableViewCell.xib; sourceTree = "<group>"; };
 		A30F899A202E74B400748E22 /* CMTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMTextField.swift; sourceTree = "<group>"; };
+		A30F899C20301B7B00748E22 /* UIColor+CM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+CM.swift"; sourceTree = "<group>"; };
 		C3EBE49520113F9400B44006 /* Fill In The Blanks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Fill In The Blanks.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3EBE49820113F9400B44006 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C3EBE49A20113F9400B44006 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -146,6 +147,7 @@
 				A30F8996202D261C00748E22 /* WordTableViewCell.swift */,
 				A30F8997202D261C00748E22 /* WordTableViewCell.xib */,
 				A30F899A202E74B400748E22 /* CMTextField.swift */,
+				A30F899C20301B7B00748E22 /* UIColor+CM.swift */,
 			);
 			path = "Fill In The Blanks";
 			sourceTree = "<group>";
@@ -477,6 +479,7 @@
 				A30F899B202E74B400748E22 /* CMTextField.swift in Sources */,
 				C3EBE49B20113F9400B44006 /* ViewController.swift in Sources */,
 				C3EBE49920113F9400B44006 /* AppDelegate.swift in Sources */,
+				A30F899D20301B7B00748E22 /* UIColor+CM.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -485,7 +488,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C3EBE4AE20113F9500B44006 /* Fill_In_The_BlanksTests.swift in Sources */,
-				C3EBE4C820113FBC00B44006 /* MessageManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

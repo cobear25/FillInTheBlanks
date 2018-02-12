@@ -9,7 +9,18 @@
 import UIKit
 import Cartography
 
+enum GameState {
+    case enterMessage
+    case addWords
+}
+
+let blankString = "_____"
+
 class ViewController: UIViewController {
+    @IBOutlet weak var instructionsLabel: UILabel!
+    @IBOutlet weak var nextButton: UIButton!
+    @IBOutlet weak var textField: CMTextField!
+    @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var messageLabel: UILabel!
     var blanksCount = 3
@@ -17,6 +28,9 @@ class ViewController: UIViewController {
     var blanks: [Int] = []
     var textFields: [UITextField] = []
     var realSentence = ""
+    var current = 0
+    var newWords: [String] = []
+    var gameState: GameState = .enterMessage
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,45 +40,112 @@ class ViewController: UIViewController {
         tableView.dataSource = self
         tableView.separatorStyle = .none
         realSentence = messageLabel.text!
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        textField.addTarget(self, action: #selector(textChanged(_:)), for: .editingChanged)
+        backButton.isHidden = true
+        nextButton.isEnabled = false
+        instructionsLabel.text = "Type a message to share"
     }
 
     @IBAction func sendTapped(_ sender: Any) {
-        var canProceed = true
-        var newWords: [String] = []
-        for field in textFields {
-            if field.text!.isEmpty {
-                canProceed = false
+        if !textField.text!.isEmpty {
+            switch gameState {
+            case .enterMessage:
+                // grab the typed message
+                realSentence = messageLabel.text!
+                // get a sentence with blanks from the message
+                let (sentence, blanks) = MessageManager.blankOutMessage(message: realSentence, count: blanksCount)
+                self.sentence = sentence.string//String(describing: sentence)
+                self.blanks = blanks
+                // fill 'newWords' with underlines
+                for _ in 1...blanksCount { newWords.append(blankString) }
+                // set the label to the sentence with blanks
+                messageLabel.attributedText = sentence
+                // setup for addWords game mode
+                current = 0
+                textField.text = ""
+                gameState = .addWords
+                nextButton.isEnabled = false
+                instructionsLabel.text = "Fill in the blanks with your own words"
+            case .addWords:
+                if current == blanksCount - 1 {
+                    // send out message
+                    print("done!")
+                } else {
+                    current += 1
+                    self.messageLabel.attributedText = MessageManager.sentenceWithNewWords(realSentence: realSentence, blanks: blanks, newWords: newWords, current: current)
+                    // set the textfield text to be the typed word if it exists
+                    textField.text = newWords[current] == blankString ? "" : newWords[current]
+                    if blanksCount > 1 {
+                        backButton.isHidden = false
+                    }
+                    // If there is text in the new field don't disable button
+                    nextButton.isEnabled = textField.text!.isEmpty ? false : true
+                    // If going to last blank but already has text, update the instructions
+                    instructionsLabel.text = "Fill in the blanks with your own words"
+                    if !textField.text!.isEmpty && current == blanksCount - 1 {
+                        instructionsLabel.text = "Submit the message to the next person"
+                    }
+                }
             }
-            newWords.append(field.text!)
+            if current == blanksCount - 1 {
+                // Last item, change next button
+                nextButton.setImage(#imageLiteral(resourceName: "btn-done"), for: .normal)
+                nextButton.setImage(#imageLiteral(resourceName: "btn-done-disabled"), for: .disabled)
+            } else {
+                nextButton.setImage(#imageLiteral(resourceName: "btn-next"), for: .normal)
+                nextButton.setImage(#imageLiteral(resourceName: "btn-next-disabled"), for: .disabled)
+            }
         }
-        if canProceed {
-            textFields.forEach { $0.text = "" }
-            let sentenceToCreate = MessageManager.newSentence(oldSentence: realSentence, blanks: self.blanks, newWords: newWords)
-            realSentence = sentenceToCreate
-            let (sentence, blanks) = MessageManager.blankOutMessage(message: sentenceToCreate, count: blanksCount)
-            self.sentence = String(describing: sentence)
-            self.blanks = blanks
-            textFields.removeAll()
-            tableView.reloadData()
-            messageLabel.attributedText = sentence
+    }
+    
+    @IBAction func backTapped(_ sender: UIButton) {
+        if current > 0 {
+            // set the next button to "next"
+            nextButton.setImage(#imageLiteral(resourceName: "btn-next"), for: .normal)
+            nextButton.setImage(#imageLiteral(resourceName: "btn-next-disabled"), for: .disabled)
+            nextButton.isEnabled = true
+            // set the blank back to an underline
+            if textField.text!.isEmpty {
+                newWords[current] = blankString
+            }
+            current -= 1
+            // Update the text with the new current so it's highlighted in the correct place
+            self.messageLabel.attributedText = MessageManager.sentenceWithNewWords(realSentence: realSentence, blanks: blanks, newWords: newWords, current: current)
+            textField.text = newWords[current]
+            // if going back to the first blank, hide the back button
+            if current <= 0 {
+                backButton.isHidden = true
+            }
+            instructionsLabel.text = "Fill in the blanks with your own words"
         }
     }
     
     @objc func textChanged(_ sender: UITextField) {
-        var newWords: [String] = []
-        for field in textFields {
-            if field.text!.isEmpty {
-                newWords.append("_____")
-            } else {
-                newWords.append(field.text!)
+        if !textField.text!.isEmpty {
+            nextButton.isEnabled = true
+        } else {
+            nextButton.isEnabled = false
+        }
+        
+        switch gameState {
+        case .enterMessage:
+            self.messageLabel.text = textField.text!
+        case .addWords:
+            if newWords.count > current {
+                instructionsLabel.text = "Fill in the blanks with your own words"
+                // set back to underlines if no text
+                if textField.text!.isEmpty {
+                    newWords[current] = blankString
+                } else {
+                    newWords[current] = textField.text!
+                    // if last word has text, update instructions
+                    if current == blanksCount - 1 {
+                        instructionsLabel.text = "Submit the message to the next person"
+                    }
+                }
+                self.messageLabel.attributedText = MessageManager.sentenceWithNewWords(realSentence: realSentence, blanks: blanks, newWords: newWords, current: current)
             }
         }
-        self.messageLabel.attributedText = MessageManager.sentenceWithNewWords(realSentence: realSentence, blanks: blanks, newWords: newWords)
     }
     
 }
@@ -74,7 +155,6 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! WordTableViewCell
         cell.textField.characterLimit = 25
         textFields.append(cell.textField)
-        cell.textField.addTarget(self, action: #selector(textChanged(_:)), for: .editingChanged)
         return cell
     }
     

@@ -12,8 +12,8 @@ import Cartography
 @IBDesignable class CMTextField: UITextField, UITextFieldDelegate {
 
     var lineView: UIView!
-    @IBInspectable var lineHeight: CGFloat = 0.5
-    var selectedLineHeight: CGFloat = 3.0
+    @IBInspectable var lineHeight: CGFloat = 1.0
+    var selectedLineHeight: CGFloat = 2.0
     @IBInspectable var characterLimit = INT_MAX
     
     required init?(coder aDecoder: NSCoder) {
@@ -32,6 +32,7 @@ import Cartography
         let leftPadding = UIView(frame: CGRect(x: 0, y: 0, width: 4, height: 1))
         leftView = leftPadding
         leftViewMode = .always
+        self.tintColor = UIColor.appDarkGray
         createLineView()
     }
     
@@ -40,12 +41,12 @@ import Cartography
         if lineView == nil {
             let lineView = UIView()
             lineView.isUserInteractionEnabled = false
-            lineView.backgroundColor = .green
+            lineView.backgroundColor = UIColor.appPurpleLight
             self.lineView = lineView
         }
         
         lineView.autoresizingMask = [.flexibleWidth, .flexibleTopMargin]
-        lineView.frame = CGRect(x: 0, y: bounds.height - 3, width: bounds.width, height: lineHeight)
+        lineView.frame = CGRect(x: 0, y: bounds.height - 2, width: bounds.width, height: lineHeight)
         addSubview(lineView)
     }
     
@@ -58,13 +59,13 @@ import Cartography
     func textFieldDidBeginEditing(_ textField: UITextField) {
         let rect = lineView.frame
         lineView.frame = CGRect(x: rect.origin.x, y: rect.origin.y, width: rect.width, height: selectedLineHeight)
-        lineView.backgroundColor = .blue
+        lineView.backgroundColor = UIColor.appPurple
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         let rect = lineView.frame
         lineView.frame = CGRect(x: rect.origin.x, y: rect.origin.y, width: rect.width, height: lineHeight)
-        lineView.backgroundColor = .red
+        lineView.backgroundColor = UIColor.appPurpleLight
     }
     
     open func lineViewRectForBounds(_ bounds: CGRect, editing: Bool) -> CGRect {

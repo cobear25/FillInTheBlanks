@@ -27,14 +27,20 @@ class MessageManager: NSObject {
             }
         }
         for index in indexesUsed {
-            words[index] = "_____"
+            words[index] = blankString
         }
         print(words)
         print(indexesUsed)
         let attributedString = NSMutableAttributedString(string: "")
+        var firstBlank = true
         for (index, word) in words.enumerated() {
-            if word == "_____" {
-                attributedString.append(NSAttributedString(string: word + (index == words.count ? "" : " "), attributes: [NSAttributedStringKey.foregroundColor: UIColor.blue]))
+            if word == blankString {
+                var color = UIColor.appPurpleLight
+                if firstBlank {
+                    color = UIColor.appPurple
+                    firstBlank = false
+                }
+                attributedString.append(NSAttributedString(string: word + (index == words.count ? "" : " "), attributes: [NSAttributedStringKey.foregroundColor: color]))
             } else {
                 attributedString.append(NSAttributedString(string: word + (index == words.count ? "" : " ")))
             }
@@ -43,7 +49,7 @@ class MessageManager: NSObject {
         return (attributedString, indexesUsed.sorted())
     }
     
-    static func sentenceWithNewWords(realSentence: String, blanks: [Int], newWords: [String]) -> NSAttributedString {
+    static func sentenceWithNewWords(realSentence: String, blanks: [Int], newWords: [String], current: Int) -> NSAttributedString {
         let words = realSentence.components(separatedBy: .whitespaces)
         let attributedString = NSMutableAttributedString(string: "")
         var nextNewWord = 0
@@ -56,7 +62,12 @@ class MessageManager: NSObject {
                 nextNewWord += 1
             }
             if colored {
-                attributedString.append(NSAttributedString(string: string + (index == words.count ? "" : " "), attributes: [NSAttributedStringKey.foregroundColor: UIColor.blue]))
+                // If the new word is the current one, make it dark purple
+                if nextNewWord - 1 == current {
+                    attributedString.append(NSAttributedString(string: string + (index == words.count ? "" : " "), attributes: [NSAttributedStringKey.foregroundColor: UIColor.appPurple]))
+                } else {
+                    attributedString.append(NSAttributedString(string: string + (index == words.count ? "" : " "), attributes: [NSAttributedStringKey.foregroundColor: UIColor.appPurpleLight]))
+                }
             } else {
                 attributedString.append(NSAttributedString(string: string + (index == words.count ? "" : " ")))
             }
