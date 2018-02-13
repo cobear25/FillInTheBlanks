@@ -21,7 +21,6 @@ class ViewController: UIViewController {
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var textField: CMTextField!
     @IBOutlet weak var backButton: UIButton!
-    @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var messageLabel: UILabel!
     var blanksCount = 3
     var sentence: String = ""
@@ -35,15 +34,17 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        tableView.register(UINib.init(nibName: "WordTableViewCell", bundle: nil), forCellReuseIdentifier: "cell")
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.separatorStyle = .none
         realSentence = messageLabel.text!
         textField.addTarget(self, action: #selector(textChanged(_:)), for: .editingChanged)
         backButton.isHidden = true
         nextButton.isEnabled = false
         instructionsLabel.text = "Type a message to share"
+        textField.autocapitalizationType = .sentences
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        textField.becomeFirstResponder()
     }
 
     @IBAction func sendTapped(_ sender: Any) {
@@ -66,6 +67,9 @@ class ViewController: UIViewController {
                 gameState = .addWords
                 nextButton.isEnabled = false
                 instructionsLabel.text = "Fill in the blanks with your own words"
+                textField.resignFirstResponder()
+                textField.autocapitalizationType = .none
+                textField.becomeFirstResponder()
             case .addWords:
                 if current == blanksCount - 1 {
                     // send out message
@@ -74,7 +78,7 @@ class ViewController: UIViewController {
                     current += 1
                     self.messageLabel.attributedText = MessageManager.sentenceWithNewWords(realSentence: realSentence, blanks: blanks, newWords: newWords, current: current)
                     // set the textfield text to be the typed word if it exists
-                    textField.text = newWords[current] == blankString ? "" : newWords[current]
+                    textField.text = newWords[current] == blankString ? "" : newWords[current].trimmingCharacters(in: .whitespaces)
                     if blanksCount > 1 {
                         backButton.isHidden = false
                     }
@@ -91,9 +95,11 @@ class ViewController: UIViewController {
                 // Last item, change next button
                 nextButton.setImage(#imageLiteral(resourceName: "btn-done"), for: .normal)
                 nextButton.setImage(#imageLiteral(resourceName: "btn-done-disabled"), for: .disabled)
+                nextButton.setImage(#imageLiteral(resourceName: "btn-done-disabled"), for: .highlighted)
             } else {
                 nextButton.setImage(#imageLiteral(resourceName: "btn-next"), for: .normal)
                 nextButton.setImage(#imageLiteral(resourceName: "btn-next-disabled"), for: .disabled)
+                nextButton.setImage(#imageLiteral(resourceName: "btn-next-disabled"), for: .highlighted)
             }
         }
     }
@@ -103,6 +109,7 @@ class ViewController: UIViewController {
             // set the next button to "next"
             nextButton.setImage(#imageLiteral(resourceName: "btn-next"), for: .normal)
             nextButton.setImage(#imageLiteral(resourceName: "btn-next-disabled"), for: .disabled)
+            nextButton.setImage(#imageLiteral(resourceName: "btn-next-disabled"), for: .highlighted)
             nextButton.isEnabled = true
             // set the blank back to an underline
             if textField.text!.isEmpty {
@@ -117,6 +124,11 @@ class ViewController: UIViewController {
                 backButton.isHidden = true
             }
             instructionsLabel.text = "Fill in the blanks with your own words"
+        }
+    }
+    @IBAction func nextKeyTapped(_ sender: CMTextField) {
+        if !sender.text!.isEmpty {
+            sendTapped(nextButton)
         }
     }
     
@@ -137,7 +149,7 @@ class ViewController: UIViewController {
                 if textField.text!.isEmpty {
                     newWords[current] = blankString
                 } else {
-                    newWords[current] = textField.text!
+                    newWords[current] = textField.text!.trimmingCharacters(in: .whitespaces)
                     // if last word has text, update instructions
                     if current == blanksCount - 1 {
                         instructionsLabel.text = "Submit the message to the next person"
@@ -149,27 +161,3 @@ class ViewController: UIViewController {
     }
     
 }
-
-extension ViewController: UITableViewDataSource, UITableViewDelegate {
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! WordTableViewCell
-        cell.textField.characterLimit = 25
-        textFields.append(cell.textField)
-        return cell
-    }
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.blanks.count
-    }
-    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        return UIView()
-    }
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 50
-    }
-}
-
