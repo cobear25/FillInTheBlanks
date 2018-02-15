@@ -8,6 +8,7 @@
 
 import UIKit
 import Cartography
+import Hero
 
 enum GameState {
     case enterMessage
@@ -16,7 +17,8 @@ enum GameState {
 
 let blankString = "_____"
 
-class ViewController: UIViewController {
+class GameViewController: UIViewController {
+    @IBOutlet weak var backButtonWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var instructionsLabel: UILabel!
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var textField: CMTextField!
@@ -30,13 +32,15 @@ class ViewController: UIViewController {
     var current = 0
     var newWords: [String] = []
     var gameState: GameState = .enterMessage
+    let buttonWidth: CGFloat = 36
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        isHeroEnabled = true
 
         realSentence = messageLabel.text!
         textField.addTarget(self, action: #selector(textChanged(_:)), for: .editingChanged)
-        backButton.isHidden = true
+        backButtonWidthConstraint.constant = 0
         nextButton.isEnabled = false
         instructionsLabel.text = "Type a message to share"
         textField.autocapitalizationType = .sentences
@@ -80,7 +84,7 @@ class ViewController: UIViewController {
                     // set the textfield text to be the typed word if it exists
                     textField.text = newWords[current] == blankString ? "" : newWords[current].trimmingCharacters(in: .whitespaces)
                     if blanksCount > 1 {
-                        backButton.isHidden = false
+                        backButtonWidthConstraint.constant = buttonWidth
                     }
                     // If there is text in the new field don't disable button
                     nextButton.isEnabled = textField.text!.isEmpty ? false : true
@@ -121,7 +125,7 @@ class ViewController: UIViewController {
             textField.text = newWords[current]
             // if going back to the first blank, hide the back button
             if current <= 0 {
-                backButton.isHidden = true
+                backButtonWidthConstraint.constant = 0
             }
             instructionsLabel.text = "Fill in the blanks with your own words"
         }
@@ -160,4 +164,7 @@ class ViewController: UIViewController {
         }
     }
     
+    @IBAction func cancelButtonTapped(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
+    }
 }
