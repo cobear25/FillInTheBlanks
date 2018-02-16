@@ -15,6 +15,8 @@
 		C36A61712034F7D700FA3C36 /* PlayerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36A616F2034F7D700FA3C36 /* PlayerTableViewCell.swift */; };
 		C36A61722034F7D700FA3C36 /* PlayerTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C36A61702034F7D700FA3C36 /* PlayerTableViewCell.xib */; };
 		C36A61742034FC6400FA3C36 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36A61732034FC6400FA3C36 /* Helpers.swift */; };
+		C373C43A2035E34D00616853 /* HostJoinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C373C4392035E34D00616853 /* HostJoinViewController.swift */; };
+		C373C43C2035EA4400616853 /* LocalServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C373C43B2035EA4400616853 /* LocalServiceManager.swift */; };
 		C3931DCE2034F1C000C3A9A6 /* LobbyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3931DCD2034F1C000C3A9A6 /* LobbyViewController.swift */; };
 		C3EBE49920113F9400B44006 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EBE49820113F9400B44006 /* AppDelegate.swift */; };
 		C3EBE49B20113F9400B44006 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EBE49A20113F9400B44006 /* GameViewController.swift */; };
@@ -58,6 +60,8 @@
 		C36A616F2034F7D700FA3C36 /* PlayerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTableViewCell.swift; sourceTree = "<group>"; };
 		C36A61702034F7D700FA3C36 /* PlayerTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlayerTableViewCell.xib; sourceTree = "<group>"; };
 		C36A61732034FC6400FA3C36 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
+		C373C4392035E34D00616853 /* HostJoinViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostJoinViewController.swift; sourceTree = "<group>"; };
+		C373C43B2035EA4400616853 /* LocalServiceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalServiceManager.swift; sourceTree = "<group>"; };
 		C3931DCD2034F1C000C3A9A6 /* LobbyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LobbyViewController.swift; sourceTree = "<group>"; };
 		C3EBE49520113F9400B44006 /* Fill In The Blanks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Fill In The Blanks.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3EBE49820113F9400B44006 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -155,6 +159,7 @@
 				C36A616F2034F7D700FA3C36 /* PlayerTableViewCell.swift */,
 				C36A61702034F7D700FA3C36 /* PlayerTableViewCell.xib */,
 				C36A61732034FC6400FA3C36 /* Helpers.swift */,
+				C373C43B2035EA4400616853 /* LocalServiceManager.swift */,
 			);
 			path = "Fill In The Blanks";
 			sourceTree = "<group>";
@@ -183,6 +188,7 @@
 				C3EBE49A20113F9400B44006 /* GameViewController.swift */,
 				C3F168852034EF330086AF0B /* HomeViewController.swift */,
 				C3931DCD2034F1C000C3A9A6 /* LobbyViewController.swift */,
+				C373C4392035E34D00616853 /* HostJoinViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -495,6 +501,8 @@
 			files = (
 				C3EBE4C720113FBC00B44006 /* MessageManager.swift in Sources */,
 				A30F899B202E74B400748E22 /* CMTextField.swift in Sources */,
+				C373C43A2035E34D00616853 /* HostJoinViewController.swift in Sources */,
+				C373C43C2035EA4400616853 /* LocalServiceManager.swift in Sources */,
 				C3931DCE2034F1C000C3A9A6 /* LobbyViewController.swift in Sources */,
 				C3EBE49B20113F9400B44006 /* GameViewController.swift in Sources */,
 				C36A61742034FC6400FA3C36 /* Helpers.swift in Sources */,

@@ -10,7 +10,6 @@ import UIKit
 import Hero
 
 class Player {
-    let images = [#imageLiteral(resourceName: "bear"), #imageLiteral(resourceName: "bird"), #imageLiteral(resourceName: "bison"), #imageLiteral(resourceName: "elephant"), #imageLiteral(resourceName: "fox"), #imageLiteral(resourceName: "giraffe"), #imageLiteral(resourceName: "kangaroo"), #imageLiteral(resourceName: "pteridactyl"), #imageLiteral(resourceName: "rat"), #imageLiteral(resourceName: "squirrel")]
     var id: String = ""
     var name: String
     var image: UIImage
@@ -18,8 +17,7 @@ class Player {
         // generate random id
         self.id = newId()
         self.name = "Me"
-        let randIndex = arc4random_uniform(UInt32(images.count))
-        self.image = images[Int(randIndex)]
+        self.image = UIImage(named: avatarNames[UserDefaults.standard.integer(forKey: EventKey.avatarIndex)]) ?? #imageLiteral(resourceName: "bear")
     }
 
     init(id: String, name: String, image: UIImage?) {
@@ -36,6 +34,7 @@ class LobbyViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         isHeroEnabled = true
         hideKeyboardWhenTappedAround()
 

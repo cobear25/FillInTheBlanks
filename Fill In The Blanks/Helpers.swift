@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 func randomString(length: Int) -> String {
 
@@ -26,4 +27,14 @@ func randomString(length: Int) -> String {
 
 func newId() -> String {
     return randomString(length: 10)
+}
+
+let avatarNames = ["bear", "bird", "bison", "elephant", "fox", "giraffe", "kangaroo", "pteridactyl", "rat", "squirrel"]
+let randomAvatarIndex = arc4random_uniform(UInt32(avatarNames.count))
+
+struct EventKey {
+    static let avatarIndex = "avatarName"
+    static let updateName = "updateName"
+    static let startGame = "startGame"
+    static let sendMessage = "sendMessage"
 }

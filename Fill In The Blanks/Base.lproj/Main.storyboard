@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -33,7 +34,7 @@
                                     <userDefinedRuntimeAttribute type="string" keyPath="heroID" value="button"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
-                                    <segue destination="jm1-fe-ogv" kind="show" id="a08-3d-uCC"/>
+                                    <segue destination="ehE-Pz-YHD" kind="show" id="NCw-Av-F88"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xoe-q9-6vA">
@@ -65,7 +66,100 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FJ2-9t-knt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1089" y="45"/>
+            <point key="canvasLocation" x="-1935" y="45"/>
+        </scene>
+        <!--Host Join View Controller-->
+        <scene sceneID="Mky-Mp-7PB">
+            <objects>
+                <viewController id="ehE-Pz-YHD" customClass="HostJoinViewController" customModule="Fill_In_The_Blanks" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="lLP-SC-Rw9">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SBd-gn-NnW">
+                                <rect key="frame" x="37" y="481" width="300" height="50"/>
+                                <color key="backgroundColor" red="0.3774965703" green="0.31951951979999998" blue="0.77259045839999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="cQr-Ph-Mdf"/>
+                                    <constraint firstAttribute="width" constant="300" id="mOh-Gd-BVX"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                <state key="normal" title="Start Game">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="heroID" value="button"/>
+                                </userDefinedRuntimeAttributes>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jDw-fF-4tV">
+                                <rect key="frame" x="37" y="549" width="300" height="50"/>
+                                <color key="backgroundColor" red="0.3774965703" green="0.31951951979999998" blue="0.77259045839999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="ZgF-vd-CA6"/>
+                                    <constraint firstAttribute="width" constant="300" id="nGh-z3-mwB"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                <state key="normal" title="Join Game">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="img-local" translatesAutoresizingMaskIntoConstraints="NO" id="8XE-5X-Xjn">
+                                <rect key="frame" x="50" y="123" width="275" height="275"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="8XE-5X-Xjn" secondAttribute="height" multiplier="1:1" id="bqy-UO-QfL"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Play Local" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Ba-lv-62S">
+                                <rect key="frame" x="16" y="32" width="343" height="62"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="62" id="WJd-WC-mPP"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="48"/>
+                                <color key="textColor" red="0.27450980392156865" green="0.27450980392156865" blue="0.27450980392156865" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vt4-kn-6fy">
+                                <rect key="frame" x="11" y="20" width="36" height="36"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="36" id="O1k-FU-mP3"/>
+                                    <constraint firstAttribute="height" constant="36" id="dVt-HV-7qJ"/>
+                                </constraints>
+                                <inset key="contentEdgeInsets" minX="5" minY="5" maxX="5" maxY="5"/>
+                                <state key="normal" image="btn-cancel"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="heroID" value="cancel"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="backButtonTapped:" destination="jm1-fe-ogv" eventType="touchUpInside" id="rdY-xq-X7b"/>
+                                    <action selector="cancelTapped:" destination="ehE-Pz-YHD" eventType="touchUpInside" id="hc7-oB-YET"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="jDw-fF-4tV" firstAttribute="centerX" secondItem="lLP-SC-Rw9" secondAttribute="centerX" id="6j7-Ky-ciR"/>
+                            <constraint firstItem="8Ba-lv-62S" firstAttribute="leading" secondItem="U4a-vO-vZG" secondAttribute="leading" constant="16" id="75f-AP-WQR"/>
+                            <constraint firstItem="U4a-vO-vZG" firstAttribute="trailing" secondItem="8Ba-lv-62S" secondAttribute="trailing" constant="16" id="AQM-Gr-Hox"/>
+                            <constraint firstItem="U4a-vO-vZG" firstAttribute="bottom" secondItem="jDw-fF-4tV" secondAttribute="bottom" constant="68" id="CmI-i4-swH"/>
+                            <constraint firstItem="8XE-5X-Xjn" firstAttribute="top" secondItem="8Ba-lv-62S" secondAttribute="bottom" constant="29" id="JtQ-z4-UZU"/>
+                            <constraint firstItem="jDw-fF-4tV" firstAttribute="top" secondItem="SBd-gn-NnW" secondAttribute="bottom" constant="18" id="KaC-IM-vDF"/>
+                            <constraint firstItem="vt4-kn-6fy" firstAttribute="leading" secondItem="U4a-vO-vZG" secondAttribute="leading" constant="11" id="SFj-UY-X8b"/>
+                            <constraint firstItem="SBd-gn-NnW" firstAttribute="centerX" secondItem="lLP-SC-Rw9" secondAttribute="centerX" id="Y6c-cp-gmE"/>
+                            <constraint firstItem="8Ba-lv-62S" firstAttribute="top" secondItem="U4a-vO-vZG" secondAttribute="top" constant="12" id="cva-cb-Tss"/>
+                            <constraint firstItem="vt4-kn-6fy" firstAttribute="top" secondItem="U4a-vO-vZG" secondAttribute="top" id="lfE-2H-AH9"/>
+                            <constraint firstItem="U4a-vO-vZG" firstAttribute="trailing" secondItem="8XE-5X-Xjn" secondAttribute="trailing" constant="50" id="sGi-N8-sRK"/>
+                            <constraint firstItem="8XE-5X-Xjn" firstAttribute="leading" secondItem="U4a-vO-vZG" secondAttribute="leading" constant="50" id="wct-G9-4st"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="U4a-vO-vZG"/>
+                    </view>
+                    <connections>
+                        <outlet property="hostButton" destination="SBd-gn-NnW" id="HWP-pv-sdd"/>
+                        <outlet property="joinButton" destination="jDw-fF-4tV" id="pYP-5i-FcI"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XGc-S6-VVT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1135.2" y="44.527736131934034"/>
         </scene>
         <!--Lobby View Controller-->
         <scene sceneID="RsR-hH-wHQ">
@@ -258,5 +352,6 @@
         <image name="btn-next-disabled" width="100" height="100"/>
         <image name="btn-prev" width="100" height="100"/>
         <image name="btn-prev-disabled" width="100" height="100"/>
+        <image name="img-local" width="636" height="619"/>
     </resources>
 </document>

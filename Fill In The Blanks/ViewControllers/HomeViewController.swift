@@ -11,6 +11,7 @@ import UIKit
 class HomeViewController: UIViewController {
     @IBOutlet weak var playLocalButton: UIButton!
     @IBOutlet weak var playOnlineButton: UIButton!
+    let localServiceManager = LocalServiceManager()
 
     override func viewDidLoad() {
         super.viewDidLoad()
