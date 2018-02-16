@@ -16,7 +16,7 @@ class Player {
     required init() {
         // generate random id
         self.id = newId()
-        self.name = "Me"
+        self.name = UserDefaults.standard.string(forKey: "displayname") ?? "Me"
         self.image = UIImage(named: avatarNames[UserDefaults.standard.integer(forKey: EventKey.avatarIndex)]) ?? #imageLiteral(resourceName: "bear")
     }
 
@@ -31,6 +31,7 @@ class LobbyViewController: UIViewController {
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
     var players: [Player] = [Player()]
+    var hosting = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,6 +43,8 @@ class LobbyViewController: UIViewController {
         tableView.register(UINib(nibName: "PlayerTableViewCell", bundle: nil), forCellReuseIdentifier: "cell")
         tableView.dataSource = self
         tableView.delegate = self
+        
+        LocalServiceManager.shared.delegate = self
     }
 
     override func didReceiveMemoryWarning() {
@@ -78,6 +81,9 @@ extension LobbyViewController: UITableViewDataSource, UITableViewDelegate {
         cell.avatarImageView.image = player.image
         if indexPath.row == 0 {
             cell.nameField.delegate = self
+            cell.editIcon.isHidden = false
+        } else {
+            cell.editIcon.isHidden = true
         }
         return cell
     }
@@ -95,6 +101,10 @@ extension LobbyViewController: UITableViewDataSource, UITableViewDelegate {
             cell.nameField.becomeFirstResponder()
         }
     }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 64
+    }
 }
 
 extension LobbyViewController: UITextFieldDelegate {
@@ -105,12 +115,31 @@ extension LobbyViewController: UITextFieldDelegate {
         cell.nameField.isHidden = true
         cell.editIcon.isHidden = false
         players.first?.name = textField.text!
+        UserDefaults.standard.set(textField.text!, forKey: "displayname")
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
+}
+
+extension LobbyViewController: LocalServiceDelegate {
+    func connectedDevicesChanged(manager: LocalServiceManager, connectedDevices: [String]) {
+//        for name in connectedDevices {
+//            players.append(Player(id: name, name: name, image: UIImage(named: avatarNames[UserDefaults.standard.integer(forKey: EventKey.avatarIndex)]) ?? #imageLiteral(resourceName: "bear")))
+//        }
+        var otherPlayers: [Player] = [Player()]
+        for peer in manager.session.connectedPeers {
+            otherPlayers.append(Player(id: newId(), name: peer.displayName, image: UIImage(named: avatarNames[UserDefaults.standard.integer(forKey: EventKey.avatarIndex)]) ?? #imageLiteral(resourceName: "bear")))
+        }
+        self.players = otherPlayers
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+    
+    
 }
 
 extension UIViewController {
@@ -124,3 +153,5 @@ extension UIViewController {
         view.endEditing(true)
     }
 }
+
+

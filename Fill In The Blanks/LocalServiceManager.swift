@@ -11,7 +11,6 @@ import MultipeerConnectivity
 
 protocol LocalServiceDelegate {
     func connectedDevicesChanged(manager : LocalServiceManager, connectedDevices: [String])
-    func stringSent(string: String)
 }
 
 class LocalServiceManager: NSObject {
@@ -28,6 +27,8 @@ class LocalServiceManager: NSObject {
         session.delegate = self
         return session
     }()
+    
+    static let shared = LocalServiceManager()
 
     override init() {
         serviceAdvertiser = MCNearbyServiceAdvertiser(peer: myPeerId, discoveryInfo: nil, serviceType: serviceType)
@@ -41,6 +42,11 @@ class LocalServiceManager: NSObject {
     }
 
     deinit {
+        serviceAdvertiser.stopAdvertisingPeer()
+        serviceBrowser.stopBrowsingForPeers()
+    }
+    
+    func stop() {
         serviceAdvertiser.stopAdvertisingPeer()
         serviceBrowser.stopBrowsingForPeers()
     }
@@ -124,10 +130,6 @@ extension LocalServiceManager: MCSessionDelegate {
     }
 
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
-        if let string = String(data: data, encoding: .utf8) {
-            print("did receive data: \(string)")
-            self.delegate?.stringSent(string: string)
-        }
         if let dict = NSKeyedUnarchiver.unarchiveObject(with: data) as? [String : Any] {
             for (k, v) in dict {
                 switch k {
