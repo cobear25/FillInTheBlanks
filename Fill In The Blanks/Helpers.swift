@@ -30,7 +30,11 @@ func newId() -> String {
 }
 
 let avatarNames = ["bear", "bird", "bison", "elephant", "fox", "giraffe", "kangaroo", "pteridactyl", "rat", "squirrel"]
-let randomAvatarIndex = arc4random_uniform(UInt32(avatarNames.count))
+var randomAvatarIndex: UInt32 {
+    get {
+        return arc4random_uniform(UInt32(avatarNames.count))
+    }
+}
 
 struct EventKey {
     static let avatarIndex = "avatarName"

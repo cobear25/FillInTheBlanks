@@ -48,6 +48,9 @@
                                 <state key="normal" title="Play Online">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
+                                <connections>
+                                    <action selector="onlineTapped:" destination="IUM-Ue-H2f" eventType="touchUpInside" id="Lr6-06-iHw"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

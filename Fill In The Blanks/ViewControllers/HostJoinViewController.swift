@@ -73,7 +73,12 @@ class HostJoinViewController: UIViewController {
 
     func proceed() {
         let vc = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "LobbyViewController") as! LobbyViewController
-        LocalServiceManager.shared.host()
+        UserDefaults.standard.set(randomAvatarIndex, forKey: EventKey.avatarIndex)
+        if hosting {
+            LocalServiceManager.shared.host()
+        } else {
+            LocalServiceManager.shared.join()
+        }
         vc.hosting = hosting
         show(vc, sender: self)
     }

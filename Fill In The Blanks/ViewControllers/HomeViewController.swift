@@ -7,8 +7,15 @@
 //
 
 import UIKit
+import MultipeerConnectivity
 
-class HomeViewController: UIViewController {
+class HomeViewController: UIViewController, MCBrowserViewControllerDelegate {
+    func browserViewControllerDidFinish(_ browserViewController: MCBrowserViewController) {
+    }
+
+    func browserViewControllerWasCancelled(_ browserViewController: MCBrowserViewController) {
+    }
+
     @IBOutlet weak var playLocalButton: UIButton!
     @IBOutlet weak var playOnlineButton: UIButton!
     let localServiceManager = LocalServiceManager()
@@ -25,6 +32,14 @@ class HomeViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    @IBAction func onlineTapped(_ sender: Any) {
+        let browserViewController = MCBrowserViewController(browser: LocalServiceManager.shared.serviceBrowser,
+                                                            session: LocalServiceManager.shared.session)
+        browserViewController.delegate = self
+        self.present(browserViewController, animated: true) {
+            LocalServiceManager.shared.serviceBrowser.startBrowsingForPeers()
+        }
+    }
 
 
 }

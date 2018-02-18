@@ -8,6 +8,7 @@
 
 import UIKit
 import Hero
+import MultipeerConnectivity
 
 class Player {
     var id: String = ""
@@ -30,12 +31,14 @@ class Player {
 class LobbyViewController: UIViewController {
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
-    var players: [Player] = [Player()]
+    var me = Player()
+    var players: [Player] = []
     var hosting = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        me.image = UIImage(named: avatarNames[UserDefaults.standard.integer(forKey: EventKey.avatarIndex)]) ?? #imageLiteral(resourceName: "bear")
+        players = [me]
         isHeroEnabled = true
         hideKeyboardWhenTappedAround()
 
@@ -53,6 +56,7 @@ class LobbyViewController: UIViewController {
     }
 
     @IBAction func backButtonTapped(_ sender: Any) {
+        LocalServiceManager.shared.stop()
         dismiss(animated: true, completion: nil)
     }
 
@@ -116,6 +120,7 @@ extension LobbyViewController: UITextFieldDelegate {
         cell.editIcon.isHidden = false
         players.first?.name = textField.text!
         UserDefaults.standard.set(textField.text!, forKey: "displayname")
+        LocalServiceManager.shared.updateName(name: textField.text!)
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -126,19 +131,38 @@ extension LobbyViewController: UITextFieldDelegate {
 
 extension LobbyViewController: LocalServiceDelegate {
     func connectedDevicesChanged(manager: LocalServiceManager, connectedDevices: [String]) {
-//        for name in connectedDevices {
-//            players.append(Player(id: name, name: name, image: UIImage(named: avatarNames[UserDefaults.standard.integer(forKey: EventKey.avatarIndex)]) ?? #imageLiteral(resourceName: "bear")))
-//        }
-        var otherPlayers: [Player] = [Player()]
+        var otherPlayers: [Player] = [me]
         for peer in manager.session.connectedPeers {
-            otherPlayers.append(Player(id: newId(), name: peer.displayName, image: UIImage(named: avatarNames[UserDefaults.standard.integer(forKey: EventKey.avatarIndex)]) ?? #imageLiteral(resourceName: "bear")))
+            let displayName = peer.displayName
+            otherPlayers.append(Player(id: displayName, name: String(displayName.dropLast(uniqueId.count)), image: UIImage(named: avatarNames[UserDefaults.standard.integer(forKey: EventKey.avatarIndex)]) ?? #imageLiteral(resourceName: "bear")))
         }
         self.players = otherPlayers
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
     }
-    
+
+    func updatedNameFromPeer(peer: MCPeerID, name: String) {
+        for player in self.players {
+            if player.id == peer.displayName {
+                player.name = name
+            }
+        }
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+
+    func avatarIndexFromPeer(peer: MCPeerID, index: Int) {
+        for player in self.players {
+            if player.id == peer.displayName {
+                player.image = UIImage(named: avatarNames[index]) ?? #imageLiteral(resourceName: "bear")
+            }
+        }
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
     
 }
 
