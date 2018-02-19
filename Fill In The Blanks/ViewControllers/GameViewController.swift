@@ -9,6 +9,7 @@
 import UIKit
 import Cartography
 import Hero
+import MultipeerConnectivity
 
 enum GameState {
     case enterMessage
@@ -33,10 +34,15 @@ class GameViewController: UIViewController {
     var newWords: [String] = []
     var gameState: GameState = .enterMessage
     let buttonWidth: CGFloat = 36
+    var sentToPeers: [MCPeerID] = []
+    var receivedMessages: [String] = []
+    var currentMessageIndex = 0
+    var waiting = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         isHeroEnabled = true
+        LocalServiceManager.shared.messagesDelegate = self
 
         realSentence = messageLabel.text!
         textField.addTarget(self, action: #selector(textChanged(_:)), for: .editingChanged)
@@ -44,6 +50,7 @@ class GameViewController: UIViewController {
         nextButton.isEnabled = false
         instructionsLabel.text = "Type a message to share"
         textField.autocapitalizationType = .sentences
+        sentToPeers.append(LocalServiceManager.shared.getPeerId())
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -55,29 +62,47 @@ class GameViewController: UIViewController {
         if !textField.text!.isEmpty {
             switch gameState {
             case .enterMessage:
-                // grab the typed message
-                realSentence = messageLabel.text!
-                // get a sentence with blanks from the message
-                let (sentence, blanks) = MessageManager.blankOutMessage(message: realSentence, count: blanksCount)
-                self.sentence = sentence.string//String(describing: sentence)
-                self.blanks = blanks
-                // fill 'newWords' with underlines
-                for _ in 1...blanksCount { newWords.append(blankString) }
-                // set the label to the sentence with blanks
-                messageLabel.attributedText = sentence
-                // setup for addWords game mode
+                for peer in LocalServiceManager.shared.session.connectedPeers.sorted(by: { $0.displayName > $1.displayName }) {
+                    if !sentToPeers.contains(peer) {
+                        sentToPeers.append(peer)
+                        LocalServiceManager.shared.sendMessageToPeer(peer: peer, message: messageLabel.text!)
+                        break
+                    }
+                }
+                messageLabel.text = "Waiting for message..."
                 current = 0
                 textField.text = ""
                 gameState = .addWords
-                nextButton.isEnabled = false
-                instructionsLabel.text = "Fill in the blanks with your own words"
-                textField.resignFirstResponder()
-                textField.autocapitalizationType = .none
-                textField.becomeFirstResponder()
+                // load received message
+                if receivedMessages.count > currentMessageIndex {
+                    loadMessage()
+                } else {
+                    print("waiting for next message")
+                    waiting = true
+                }
             case .addWords:
                 if current == blanksCount - 1 {
                     // send out message
-                    print("done!")
+                    currentMessageIndex += 1
+                    // send message to next peer
+                    for peer in LocalServiceManager.shared.session.connectedPeers.sorted(by: { $0.displayName > $1.displayName }) {
+                        if !sentToPeers.contains(peer) {
+                            sentToPeers.append(peer)
+                            LocalServiceManager.shared.sendMessageToPeer(peer: peer, message: messageLabel.text!)
+                            break
+                        }
+                    }
+                    // load received message
+                    if receivedMessages.count > currentMessageIndex {
+                        loadMessage()
+                    } else {
+                        print("waiting for next message")
+                        waiting = true
+                    }
+                    // go to results if done
+                    if sentToPeers.count >= LocalServiceManager.shared.session.connectedPeers.count {
+                        print("that's all folks")
+                    }
                 } else {
                     current += 1
                     self.messageLabel.attributedText = MessageManager.sentenceWithNewWords(realSentence: realSentence, blanks: blanks, newWords: newWords, current: current)
@@ -106,6 +131,29 @@ class GameViewController: UIViewController {
                 nextButton.setImage(#imageLiteral(resourceName: "btn-next-disabled"), for: .highlighted)
             }
         }
+    }
+    
+    func loadMessage() {
+        newWords.removeAll()
+        // grab the typed message
+        realSentence = receivedMessages[currentMessageIndex]
+        // get a sentence with blanks from the message
+        let (sentence, blanks) = MessageManager.blankOutMessage(message: realSentence, count: blanksCount)
+        self.sentence = sentence.string//String(describing: sentence)
+        self.blanks = blanks
+        // fill 'newWords' with underlines
+        for _ in 1...blanksCount { newWords.append(blankString) }
+        // set the label to the sentence with blanks
+        messageLabel.attributedText = sentence
+        // setup for addWords game mode
+        current = 0
+        textField.text = ""
+        gameState = .addWords
+        nextButton.isEnabled = false
+        instructionsLabel.text = "Fill in the blanks with your own words"
+        textField.resignFirstResponder()
+        textField.autocapitalizationType = .none
+        textField.becomeFirstResponder()
     }
     
     @IBAction func backTapped(_ sender: UIButton) {
@@ -166,5 +214,16 @@ class GameViewController: UIViewController {
     
     @IBAction func cancelButtonTapped(_ sender: Any) {
         dismiss(animated: true, completion: nil)
+    }
+}
+
+extension GameViewController: MessagesDelegate {
+    func messageReceived(message: String) {
+        DispatchQueue.main.async {
+            self.receivedMessages.append(message)
+            if self.waiting {
+                self.loadMessage()
+            }
+        }
     }
 }

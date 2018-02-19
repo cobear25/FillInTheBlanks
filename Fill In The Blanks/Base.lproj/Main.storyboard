@@ -256,7 +256,7 @@
                                     <action selector="backButtonTapped:" destination="jm1-fe-ogv" eventType="touchUpInside" id="KDv-zU-bnA"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R4O-6w-vlf">
+                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R4O-6w-vlf">
                                 <rect key="frame" x="37.5" y="549" width="300" height="50"/>
                                 <color key="backgroundColor" red="0.3774965703" green="0.31951951979999998" blue="0.77259045839999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
@@ -266,6 +266,9 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                 <state key="normal" title="Start">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <state key="disabled">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="heroID" value="button"/>
@@ -293,6 +296,7 @@
                         <viewLayoutGuide key="safeArea" id="upe-mE-x6b"/>
                     </view>
                     <connections>
+                        <outlet property="backButton" destination="lpO-aL-SiW" id="50h-LG-Gff"/>
                         <outlet property="startButton" destination="R4O-6w-vlf" id="hqR-rs-kSN"/>
                         <outlet property="tableView" destination="yCT-Qn-XYs" id="PaS-rN-MYB"/>
                     </connections>

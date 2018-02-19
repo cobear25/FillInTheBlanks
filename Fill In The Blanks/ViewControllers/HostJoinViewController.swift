@@ -33,6 +33,10 @@ class HostJoinViewController: UIViewController {
         alertTextField.addTarget(self, action: #selector(textChanged(_:)), for: .editingChanged)
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    }
+    
     func showAlert() {
         alertView.isHidden = false
         alertView.transform = CGAffineTransform(scaleX: 0.01, y: 0.01)
@@ -73,7 +77,6 @@ class HostJoinViewController: UIViewController {
 
     func proceed() {
         let vc = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "LobbyViewController") as! LobbyViewController
-        UserDefaults.standard.set(randomAvatarIndex, forKey: EventKey.avatarIndex)
         if hosting {
             LocalServiceManager.shared.host()
         } else {

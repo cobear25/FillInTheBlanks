@@ -18,7 +18,7 @@ class Player {
         // generate random id
         self.id = newId()
         self.name = UserDefaults.standard.string(forKey: "displayname") ?? "Me"
-        self.image = UIImage(named: avatarNames[UserDefaults.standard.integer(forKey: EventKey.avatarIndex)]) ?? #imageLiteral(resourceName: "bear")
+        self.image = UIImage(named: avatarNames[myAvatarIndex]) ?? #imageLiteral(resourceName: "bear")
     }
 
     init(id: String, name: String, image: UIImage?) {
@@ -29,6 +29,7 @@ class Player {
 }
 
 class LobbyViewController: UIViewController {
+    @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
     var me = Player()
@@ -37,7 +38,6 @@ class LobbyViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        me.image = UIImage(named: avatarNames[UserDefaults.standard.integer(forKey: EventKey.avatarIndex)]) ?? #imageLiteral(resourceName: "bear")
         players = [me]
         isHeroEnabled = true
         hideKeyboardWhenTappedAround()
@@ -48,6 +48,7 @@ class LobbyViewController: UIViewController {
         tableView.delegate = self
         
         LocalServiceManager.shared.delegate = self
+        startButton.isEnabled = false
     }
 
     override func didReceiveMemoryWarning() {
@@ -61,6 +62,12 @@ class LobbyViewController: UIViewController {
     }
 
     @IBAction func startButtonTapped(_ sender: Any) {
+        LocalServiceManager.shared.startGame()
+        proceed()
+    }
+    
+    func proceed() {
+        LocalServiceManager.shared.inGame = true
         let vc = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "GameViewController")
         show(vc, sender: self)
     }
@@ -134,10 +141,15 @@ extension LobbyViewController: LocalServiceDelegate {
         var otherPlayers: [Player] = [me]
         for peer in manager.session.connectedPeers {
             let displayName = peer.displayName
-            otherPlayers.append(Player(id: displayName, name: String(displayName.dropLast(uniqueId.count)), image: UIImage(named: avatarNames[UserDefaults.standard.integer(forKey: EventKey.avatarIndex)]) ?? #imageLiteral(resourceName: "bear")))
+            otherPlayers.append(Player(id: displayName, name: String(displayName.dropLast(uniqueId.count + 2)), image: UIImage(named: avatarNames[Int(peer.displayName.suffix(2))!])))
         }
-        self.players = otherPlayers
+        self.players = otherPlayers.sorted { $0.id > $1.id }
         DispatchQueue.main.async {
+            if self.hosting && self.players.count > 1 {
+                self.startButton.isEnabled = true
+            } else {
+                self.startButton.isEnabled = false
+            }
             self.tableView.reloadData()
         }
     }
@@ -164,6 +176,19 @@ extension LobbyViewController: LocalServiceDelegate {
         }
     }
     
+    func hostDisconnected() {
+        DispatchQueue.main.async {
+            self.backButtonTapped(self.backButton)
+        }
+    }
+    
+    func gameStarted(started: Bool) {
+        if started {
+            DispatchQueue.main.async {
+                self.proceed()
+            }
+        }
+    }
 }
 
 extension UIViewController {

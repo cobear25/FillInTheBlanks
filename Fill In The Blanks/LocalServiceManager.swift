@@ -13,19 +13,44 @@ protocol LocalServiceDelegate {
     func connectedDevicesChanged(manager : LocalServiceManager, connectedDevices: [String])
     func updatedNameFromPeer(peer: MCPeerID, name: String)
     func avatarIndexFromPeer(peer: MCPeerID, index: Int)
+    func hostDisconnected()
+    func gameStarted(started: Bool)
+}
+
+protocol MessagesDelegate {
+    func messageReceived(message: String)
 }
 
 let uniqueId = newId()
+var myDisplayName: String {
+    get {
+        return UserDefaults.standard.string(forKey: "displayname") ?? UIDevice.current.name
+    }
+    set {
+        UserDefaults.standard.set(newValue, forKey: "displayname")
+    }
+}
+
+var myAvatarIndex: Int {
+    get {
+        return UserDefaults.standard.integer(forKey: EventKey.avatarIndex)
+    } set {
+        UserDefaults.standard.set(newValue, forKey: EventKey.avatarIndex)
+    }
+}
 
 class LocalServiceManager: NSObject {
     private let serviceType = "fill-in-blanks"
 
-    private let myPeerId = MCPeerID(displayName: (UserDefaults.standard.string(forKey: "displayname") ?? UIDevice.current.name) + uniqueId)
+    private let myPeerId = MCPeerID(displayName: myDisplayName + uniqueId + String(format: "%02d", myAvatarIndex))
     private let serviceAdvertiser : MCNearbyServiceAdvertiser
     let serviceBrowser : MCNearbyServiceBrowser
 
     var delegate: LocalServiceDelegate?
+    var messagesDelegate: MessagesDelegate?
     private var hosting = false
+    var inSession = false
+    var inGame = false
 
     lazy var session : MCSession = {
         let session = MCSession(peer: self.myPeerId, securityIdentity: nil, encryptionPreference: .none)
@@ -38,7 +63,7 @@ class LocalServiceManager: NSObject {
     override init() {
         serviceAdvertiser = MCNearbyServiceAdvertiser(
             peer: myPeerId,
-            discoveryInfo: ["avatar" : avatarNames[UserDefaults.standard.integer(forKey: EventKey.avatarIndex)]],
+            discoveryInfo: ["avatar" : avatarNames[myAvatarIndex]],
             serviceType: serviceType)
 
         serviceBrowser = MCNearbyServiceBrowser(peer: myPeerId, serviceType: serviceType)
@@ -52,18 +77,29 @@ class LocalServiceManager: NSObject {
         serviceAdvertiser.stopAdvertisingPeer()
         serviceBrowser.stopBrowsingForPeers()
     }
+    
+    func getPeerId() -> MCPeerID {
+        return myPeerId
+    }
 
     func stop() {
+        inGame = false
+        inSession = false
         serviceAdvertiser.stopAdvertisingPeer()
         serviceBrowser.stopBrowsingForPeers()
+        session.disconnect()
     }
 
     func host() {
+        inGame = false
+        inSession = false
         hosting = true
         serviceAdvertiser.startAdvertisingPeer()
     }
 
     func join() {
+        inGame = false
+        inSession = false
         hosting = false
         serviceBrowser.startBrowsingForPeers()
     }
@@ -109,10 +145,10 @@ class LocalServiceManager: NSObject {
     }
 
     // send a new message out to the game
-    func sendMessage(message: String) {
+    func sendMessageToPeer(peer: MCPeerID, message: String) {
         let dict = [EventKey.sendMessage: message]
         let data = NSKeyedArchiver.archivedData(withRootObject: dict)
-        sendData(data: data, name: "sent message")
+        sendDataToPeers(peers: [peer], data: data, name: "sent message")
     }
 
     func sendAvatarIndex() {
@@ -127,12 +163,13 @@ extension LocalServiceManager: MCSessionDelegate {
         if peerID.displayName != myPeerId.displayName {
             self.delegate?.connectedDevicesChanged(manager: self, connectedDevices: session.connectedPeers.map { $0.displayName })
             if !session.connectedPeers.contains(peerID) {
-                // send avatar index to new peer
-                sendDataToPeers(peers: [peerID], data: NSKeyedArchiver.archivedData(withRootObject: [EventKey.avatarIndex : UserDefaults.standard.integer(forKey: EventKey.avatarIndex)]), name: "avatar index")
-                // send updated name to new peer
-                let dict = [EventKey.updateName: UserDefaults.standard.string(forKey: "displayname") ?? ""]
-                let data = NSKeyedArchiver.archivedData(withRootObject: dict)
-                sendDataToPeers(peers: [peerID], data: data, name: "updated name")
+                let when = DispatchTime.now() + 0.3 // change 2 to desired number of seconds
+                DispatchQueue.main.asyncAfter(deadline: when) {
+                    // send updated name to new peer
+                    let dict = [EventKey.updateName: UserDefaults.standard.string(forKey: "displayname") ?? ""]
+                    let data = NSKeyedArchiver.archivedData(withRootObject: dict)
+                    self.sendDataToPeers(peers: [peerID], data: data, name: "updated name")
+                }
             }
         }
     }
@@ -145,9 +182,11 @@ extension LocalServiceManager: MCSessionDelegate {
                     // make sure everyone else has your name and then update UI
                     self.delegate?.updatedNameFromPeer(peer: peerID, name: v as! String)
                 case EventKey.startGame:
+                    self.delegate?.gameStarted(started: v as! Bool)
                     print("start game!")
                 case EventKey.sendMessage:
                     print("message: \(v), sent from peer \(peerID)")
+                    messagesDelegate?.messageReceived(message: v as! String)
                 case EventKey.avatarIndex:
                     // make sure everyone else has your avatar and then update UI
                     self.delegate?.avatarIndexFromPeer(peer: peerID, index: v as! Int)
@@ -173,10 +212,12 @@ extension LocalServiceManager: MCNearbyServiceAdvertiserDelegate {
 
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
         print("got invitation: \(myPeerId)")
-
-        // accept the invitation then send the avatar
-        if peerID.displayName != myPeerId.displayName {
-            invitationHandler(true, session)
+        
+        if !inGame {
+            // accept the invitation then send the avatar
+            if peerID.displayName != myPeerId.displayName {
+                invitationHandler(true, session)
+            }
         }
     }
 }
@@ -184,16 +225,22 @@ extension LocalServiceManager: MCNearbyServiceAdvertiserDelegate {
 // For joining
 extension LocalServiceManager: MCNearbyServiceBrowserDelegate {
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
-        print("found peer: \(peerID)")
-        print("inviting peer: \(peerID)")
-        if peerID.displayName != myPeerId.displayName {
-            browser.invitePeer(peerID, to: session, withContext: nil, timeout: 30)
+        if !inSession {
+            print("found peer: \(peerID)")
+            print("inviting peer: \(peerID)")
+            if peerID.displayName != myPeerId.displayName {
+                browser.invitePeer(peerID, to: session, withContext: nil, timeout: 30)
+                inSession = true
+            }
         }
     }
 
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
         print("lost peer: \(peerID)")
         self.delegate?.connectedDevicesChanged(manager: self, connectedDevices: session.connectedPeers.map { $0.displayName }.filter { $0 != peerID.displayName })
+        // host has disconnected
+        delegate?.hostDisconnected()
+        inSession = false
     }
 }
 
