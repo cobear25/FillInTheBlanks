@@ -34,10 +34,10 @@ class GameViewController: UIViewController {
     var newWords: [String] = []
     var gameState: GameState = .enterMessage
     let buttonWidth: CGFloat = 36
-    var sentToPeers: [MCPeerID] = []
     var receivedMessages: [String] = []
     var currentMessageIndex = 0
     var waiting = false
+    var peerArray: [MCPeerID] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,7 +50,13 @@ class GameViewController: UIViewController {
         nextButton.isEnabled = false
         instructionsLabel.text = "Type a message to share"
         textField.autocapitalizationType = .sentences
-        sentToPeers.append(LocalServiceManager.shared.getPeerId())
+
+        peerArray = LocalServiceManager.shared.session.connectedPeers
+        peerArray.append(LocalServiceManager.shared.getPeerId())
+        peerArray = peerArray.sorted(by: { $0.displayName > $1.displayName })
+        while peerArray[0] != LocalServiceManager.shared.getPeerId() {
+            peerArray.rotate(positions: 1)
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -62,13 +68,7 @@ class GameViewController: UIViewController {
         if !textField.text!.isEmpty {
             switch gameState {
             case .enterMessage:
-                for peer in LocalServiceManager.shared.session.connectedPeers.sorted(by: { $0.displayName > $1.displayName }) {
-                    if !sentToPeers.contains(peer) {
-                        sentToPeers.append(peer)
-                        LocalServiceManager.shared.sendMessageToPeer(peer: peer, message: messageLabel.text!)
-                        break
-                    }
-                }
+                LocalServiceManager.shared.sendMessageToPeer(peer: peerArray[1], message: messageLabel.text!)
                 messageLabel.text = "Waiting for message..."
                 current = 0
                 textField.text = ""
@@ -78,30 +78,28 @@ class GameViewController: UIViewController {
                     loadMessage()
                 } else {
                     print("waiting for next message")
+                    resetUI()
                     waiting = true
                 }
             case .addWords:
                 if current == blanksCount - 1 {
                     // send out message
                     currentMessageIndex += 1
-                    // send message to next peer
-                    for peer in LocalServiceManager.shared.session.connectedPeers.sorted(by: { $0.displayName > $1.displayName }) {
-                        if !sentToPeers.contains(peer) {
-                            sentToPeers.append(peer)
-                            LocalServiceManager.shared.sendMessageToPeer(peer: peer, message: messageLabel.text!)
-                            break
-                        }
+                    // go to results if done
+                    if currentMessageIndex >= peerArray.count - 1 {
+                        print("that's all folks")
+                        return
                     }
+                    // send message to next peer
+                    LocalServiceManager.shared.sendMessageToPeer(peer: peerArray[1], message: messageLabel.text!)
                     // load received message
                     if receivedMessages.count > currentMessageIndex {
                         loadMessage()
                     } else {
+                        messageLabel.text = "Waiting for message..."
                         print("waiting for next message")
+                        resetUI()
                         waiting = true
-                    }
-                    // go to results if done
-                    if sentToPeers.count >= LocalServiceManager.shared.session.connectedPeers.count {
-                        print("that's all folks")
                     }
                 } else {
                     current += 1
@@ -134,12 +132,13 @@ class GameViewController: UIViewController {
     }
     
     func loadMessage() {
+        waiting = false
         newWords.removeAll()
         // grab the typed message
         realSentence = receivedMessages[currentMessageIndex]
         // get a sentence with blanks from the message
         let (sentence, blanks) = MessageManager.blankOutMessage(message: realSentence, count: blanksCount)
-        self.sentence = sentence.string//String(describing: sentence)
+        self.sentence = sentence.string
         self.blanks = blanks
         // fill 'newWords' with underlines
         for _ in 1...blanksCount { newWords.append(blankString) }
@@ -148,12 +147,24 @@ class GameViewController: UIViewController {
         // setup for addWords game mode
         current = 0
         textField.text = ""
+        textField.isEnabled = true
+        backButtonWidthConstraint.constant = 0
         gameState = .addWords
         nextButton.isEnabled = false
         instructionsLabel.text = "Fill in the blanks with your own words"
         textField.resignFirstResponder()
         textField.autocapitalizationType = .none
         textField.becomeFirstResponder()
+    }
+    
+    func resetUI() {
+        textField.text = ""
+        textField.isEnabled = false
+        backButtonWidthConstraint.constant = 0
+        nextButton.setImage(#imageLiteral(resourceName: "btn-next"), for: .normal)
+        nextButton.setImage(#imageLiteral(resourceName: "btn-next-disabled"), for: .disabled)
+        nextButton.setImage(#imageLiteral(resourceName: "btn-next-disabled"), for: .highlighted)
+        nextButton.isEnabled = false
     }
     
     @IBAction func backTapped(_ sender: UIButton) {

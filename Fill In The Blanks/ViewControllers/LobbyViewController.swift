@@ -68,6 +68,7 @@ class LobbyViewController: UIViewController {
     
     func proceed() {
         LocalServiceManager.shared.inGame = true
+        LocalServiceManager.shared.delegate = nil
         let vc = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "GameViewController")
         show(vc, sender: self)
     }
