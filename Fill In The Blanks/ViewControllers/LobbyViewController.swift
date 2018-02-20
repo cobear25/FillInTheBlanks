@@ -144,7 +144,7 @@ extension LobbyViewController: LocalServiceDelegate {
             let displayName = peer.displayName
             otherPlayers.append(Player(id: displayName, name: String(displayName.dropLast(uniqueId.count + 2)), image: UIImage(named: avatarNames[Int(peer.displayName.suffix(2))!])))
         }
-        self.players = otherPlayers.sorted { $0.id > $1.id }
+        self.players = otherPlayers
         DispatchQueue.main.async {
             if self.hosting && self.players.count > 1 {
                 self.startButton.isEnabled = true
