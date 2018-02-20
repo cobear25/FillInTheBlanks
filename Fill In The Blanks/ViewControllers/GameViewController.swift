@@ -85,13 +85,14 @@ class GameViewController: UIViewController {
                 if current == blanksCount - 1 {
                     // send out message
                     currentMessageIndex += 1
+                    // send message to next peer
+                    LocalServiceManager.shared.sendMessageToPeer(peer: peerArray[1], message: messageLabel.text!)
                     // go to results if done
                     if currentMessageIndex >= peerArray.count - 1 {
                         print("that's all folks")
+                        resetUI()
                         return
                     }
-                    // send message to next peer
-                    LocalServiceManager.shared.sendMessageToPeer(peer: peerArray[1], message: messageLabel.text!)
                     // load received message
                     if receivedMessages.count > currentMessageIndex {
                         loadMessage()
@@ -231,9 +232,14 @@ class GameViewController: UIViewController {
 extension GameViewController: MessagesDelegate {
     func messageReceived(message: String) {
         DispatchQueue.main.async {
-            self.receivedMessages.append(message)
-            if self.waiting {
-                self.loadMessage()
+            if self.receivedMessages.count >= self.peerArray.count - 1 {
+                self.receivedMessages.append(message)
+                print(self.receivedMessages)
+            } else {
+                self.receivedMessages.append(message)
+                if self.waiting {
+                    self.loadMessage()
+                }
             }
         }
     }
