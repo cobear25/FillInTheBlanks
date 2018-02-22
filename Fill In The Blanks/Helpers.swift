@@ -41,6 +41,7 @@ struct EventKey {
     static let updateName = "updateName"
     static let startGame = "startGame"
     static let sendMessage = "sendMessage"
+    static let sendFinalMessage = "sendFinalMessage"
 }
 
 extension Array {

@@ -10,24 +10,6 @@ import UIKit
 import Hero
 import MultipeerConnectivity
 
-class Player {
-    var id: String = ""
-    var name: String
-    var image: UIImage
-    required init() {
-        // generate random id
-        self.id = newId()
-        self.name = UserDefaults.standard.string(forKey: "displayname") ?? "Me"
-        self.image = UIImage(named: avatarNames[myAvatarIndex]) ?? #imageLiteral(resourceName: "bear")
-    }
-
-    init(id: String, name: String, image: UIImage?) {
-        self.id = id
-        self.name = name
-        self.image = image ?? #imageLiteral(resourceName: "bear")
-    }
-}
-
 class LobbyViewController: UIViewController {
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var startButton: UIButton!

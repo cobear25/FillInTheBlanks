@@ -19,6 +19,7 @@ enum GameState {
 let blankString = "_____"
 
 class GameViewController: UIViewController {
+    @IBOutlet weak var textFieldBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var backButtonWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var instructionsLabel: UILabel!
     @IBOutlet weak var nextButton: UIButton!
@@ -34,10 +35,15 @@ class GameViewController: UIViewController {
     var newWords: [String] = []
     var gameState: GameState = .enterMessage
     let buttonWidth: CGFloat = 36
-    var receivedMessages: [String] = []
+    var receivedMessages: [Message] = []
     var currentMessageIndex = 0
     var waiting = false
+    var done = false
     var peerArray: [MCPeerID] = []
+    var finalMessages: [Message] = []
+
+    let ipadKeyboardOffset: CGFloat = 350
+    let iphoneKeyboardOffset: CGFloat = 300
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,7 +54,7 @@ class GameViewController: UIViewController {
         textField.addTarget(self, action: #selector(textChanged(_:)), for: .editingChanged)
         backButtonWidthConstraint.constant = 0
         nextButton.isEnabled = false
-        instructionsLabel.text = "Type a message to share"
+        instructionsLabel.text = "Type a message to share, at least 5 words"
         textField.autocapitalizationType = .sentences
 
         peerArray = LocalServiceManager.shared.session.connectedPeers
@@ -56,6 +62,11 @@ class GameViewController: UIViewController {
         peerArray = peerArray.sorted(by: { $0.displayName > $1.displayName })
         while peerArray[0] != LocalServiceManager.shared.getPeerId() {
             peerArray.rotate(positions: 1)
+        }
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            textFieldBottomConstraint.constant = ipadKeyboardOffset
+        } else {
+            textFieldBottomConstraint.constant = iphoneKeyboardOffset
         }
     }
     
@@ -68,7 +79,9 @@ class GameViewController: UIViewController {
         if !textField.text!.isEmpty {
             switch gameState {
             case .enterMessage:
-                LocalServiceManager.shared.sendMessageToPeer(peer: peerArray[1], message: messageLabel.text!)
+                let newMessage = Message()
+                newMessage.messages.append(messageLabel.text!)
+                LocalServiceManager.shared.sendMessageToPeer(peer: peerArray[1], message: newMessage)
                 messageLabel.text = "Waiting for message..."
                 current = 0
                 textField.text = ""
@@ -86,10 +99,31 @@ class GameViewController: UIViewController {
                     // send out message
                     currentMessageIndex += 1
                     // send message to next peer
-                    LocalServiceManager.shared.sendMessageToPeer(peer: peerArray[1], message: messageLabel.text!)
+                    var messageToSend: Message
+                    if receivedMessages.count > currentMessageIndex {
+                        messageToSend = receivedMessages[currentMessageIndex - 1]
+                    } else {
+                        messageToSend = receivedMessages.last!
+                    }
+                    messageToSend.messages.append(messageLabel.text!)
+                    LocalServiceManager.shared.sendMessageToPeer(peer: peerArray[1], message: messageToSend)
                     // go to results if done
                     if currentMessageIndex >= peerArray.count - 1 {
                         print("that's all folks")
+                        messageLabel.text = "Waiting for message..."
+                        done = true
+                        // you're done first
+                        if receivedMessages.count <= currentMessageIndex {
+                            waiting = true
+                        } else {
+                            // you've already received the last message
+                            print("your message: \(receivedMessages.last!)")
+                            finalMessages.append(receivedMessages.last!)
+                            LocalServiceManager.shared.sendFinalMessage(message: receivedMessages.last!)
+                            if self.finalMessages.count >= self.peerArray.count {
+                                proceed()
+                            }
+                        }
                         resetUI()
                         return
                     }
@@ -136,7 +170,7 @@ class GameViewController: UIViewController {
         waiting = false
         newWords.removeAll()
         // grab the typed message
-        realSentence = receivedMessages[currentMessageIndex]
+        realSentence = receivedMessages[currentMessageIndex].messages.last!
         // get a sentence with blanks from the message
         let (sentence, blanks) = MessageManager.blankOutMessage(message: realSentence, count: blanksCount)
         self.sentence = sentence.string
@@ -192,7 +226,19 @@ class GameViewController: UIViewController {
     }
     @IBAction func nextKeyTapped(_ sender: CMTextField) {
         if !sender.text!.isEmpty {
-            sendTapped(nextButton)
+            if gameState == .enterMessage {
+                self.messageLabel.text = textField.text!
+                // disable next button if there are less than 5 words or less than 8 characters
+                let trimmedString = textField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+                let words = trimmedString.components(separatedBy: .whitespaces)
+                if textField.text!.count <= 12 || words.count < 5 {
+                    // do nothing
+                } else {
+                    sendTapped(nextButton)
+                }
+            } else {
+                sendTapped(nextButton)
+            }
         }
     }
     
@@ -206,6 +252,12 @@ class GameViewController: UIViewController {
         switch gameState {
         case .enterMessage:
             self.messageLabel.text = textField.text!
+            // disable next button if there are less than 5 words or less than 8 characters
+            let trimmedString = textField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+            let words = trimmedString.components(separatedBy: .whitespaces)
+            if textField.text!.count <= 12 || words.count < 5 {
+                nextButton.isEnabled = false
+            }
         case .addWords:
             if newWords.count > current {
                 instructionsLabel.text = "Fill in the blanks with your own words"
@@ -225,16 +277,32 @@ class GameViewController: UIViewController {
     }
     
     @IBAction func cancelButtonTapped(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
+        LocalServiceManager.shared.stop()
+        self.view.window?.rootViewController?.dismiss(animated: false, completion: nil)
+    }
+
+    func proceed() {
+        // go to results screen passing along finalMessages
+        let vc = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ResultsViewController") as! ResultsViewController
+        vc.messages = self.finalMessages
+        show(vc, sender: self)
     }
 }
 
 extension GameViewController: MessagesDelegate {
-    func messageReceived(message: String) {
+    func messageReceived(message: Message) {
         DispatchQueue.main.async {
             if self.receivedMessages.count >= self.peerArray.count - 1 {
                 self.receivedMessages.append(message)
-                print(self.receivedMessages)
+                if self.done {
+                    // Already done and waiting for final message
+                    print("your message: \(self.receivedMessages.last!.messages)")
+                    self.finalMessages.append(self.receivedMessages.last!)
+                    LocalServiceManager.shared.sendFinalMessage(message: self.receivedMessages.last!)
+                    if self.finalMessages.count >= self.peerArray.count {
+                        self.proceed()
+                    }
+                }
             } else {
                 self.receivedMessages.append(message)
                 if self.waiting {
@@ -243,4 +311,14 @@ extension GameViewController: MessagesDelegate {
             }
         }
     }
+
+    func finalMessageReceived(message: Message) {
+        DispatchQueue.main.async {
+            self.finalMessages.append(message)
+            if self.finalMessages.count >= self.peerArray.count {
+                self.proceed()
+            }
+        }
+    }
+
 }

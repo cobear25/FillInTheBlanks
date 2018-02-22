@@ -12,12 +12,15 @@
 		71EFC87A139C61B5AC96EDFC /* Pods_Fill_In_The_Blanks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B168DA4BCCFEFF1C9B99FB /* Pods_Fill_In_The_Blanks.framework */; };
 		A30F899B202E74B400748E22 /* CMTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30F899A202E74B400748E22 /* CMTextField.swift */; };
 		A30F899D20301B7B00748E22 /* UIColor+CM.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30F899C20301B7B00748E22 /* UIColor+CM.swift */; };
+		C3050E12203E53B300966243 /* ResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3050E11203E53B300966243 /* ResultsViewController.swift */; };
 		C36A61712034F7D700FA3C36 /* PlayerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36A616F2034F7D700FA3C36 /* PlayerTableViewCell.swift */; };
 		C36A61722034F7D700FA3C36 /* PlayerTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C36A61702034F7D700FA3C36 /* PlayerTableViewCell.xib */; };
 		C36A61742034FC6400FA3C36 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36A61732034FC6400FA3C36 /* Helpers.swift */; };
 		C373C43A2035E34D00616853 /* HostJoinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C373C4392035E34D00616853 /* HostJoinViewController.swift */; };
 		C373C43C2035EA4400616853 /* LocalServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C373C43B2035EA4400616853 /* LocalServiceManager.swift */; };
 		C3931DCE2034F1C000C3A9A6 /* LobbyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3931DCD2034F1C000C3A9A6 /* LobbyViewController.swift */; };
+		C3E3A882203E178D00666C5F /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E3A881203E178D00666C5F /* Player.swift */; };
+		C3E3A884203E17C100666C5F /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E3A883203E17C100666C5F /* Message.swift */; };
 		C3EBE49920113F9400B44006 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EBE49820113F9400B44006 /* AppDelegate.swift */; };
 		C3EBE49B20113F9400B44006 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3EBE49A20113F9400B44006 /* GameViewController.swift */; };
 		C3EBE49E20113F9400B44006 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C3EBE49C20113F9400B44006 /* Main.storyboard */; };
@@ -57,12 +60,15 @@
 		929B7C2229DB0044D4A438F7 /* Pods_Fill_In_The_BlanksUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Fill_In_The_BlanksUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A30F899A202E74B400748E22 /* CMTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMTextField.swift; sourceTree = "<group>"; };
 		A30F899C20301B7B00748E22 /* UIColor+CM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+CM.swift"; sourceTree = "<group>"; };
+		C3050E11203E53B300966243 /* ResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewController.swift; sourceTree = "<group>"; };
 		C36A616F2034F7D700FA3C36 /* PlayerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTableViewCell.swift; sourceTree = "<group>"; };
 		C36A61702034F7D700FA3C36 /* PlayerTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlayerTableViewCell.xib; sourceTree = "<group>"; };
 		C36A61732034FC6400FA3C36 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		C373C4392035E34D00616853 /* HostJoinViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostJoinViewController.swift; sourceTree = "<group>"; };
 		C373C43B2035EA4400616853 /* LocalServiceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalServiceManager.swift; sourceTree = "<group>"; };
 		C3931DCD2034F1C000C3A9A6 /* LobbyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LobbyViewController.swift; sourceTree = "<group>"; };
+		C3E3A881203E178D00666C5F /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		C3E3A883203E17C100666C5F /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		C3EBE49520113F9400B44006 /* Fill In The Blanks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Fill In The Blanks.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3EBE49820113F9400B44006 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C3EBE49A20113F9400B44006 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
@@ -122,6 +128,15 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		C3E3A880203E177000666C5F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				C3E3A881203E178D00666C5F /* Player.swift */,
+				C3E3A883203E17C100666C5F /* Message.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		C3EBE48C20113F9400B44006 = {
 			isa = PBXGroup;
 			children = (
@@ -147,6 +162,7 @@
 		C3EBE49720113F9400B44006 /* Fill In The Blanks */ = {
 			isa = PBXGroup;
 			children = (
+				C3E3A880203E177000666C5F /* Models */,
 				C3F168842034EF1C0086AF0B /* ViewControllers */,
 				C3EBE49820113F9400B44006 /* AppDelegate.swift */,
 				C3EBE49C20113F9400B44006 /* Main.storyboard */,
@@ -189,6 +205,7 @@
 				C3F168852034EF330086AF0B /* HomeViewController.swift */,
 				C3931DCD2034F1C000C3A9A6 /* LobbyViewController.swift */,
 				C373C4392035E34D00616853 /* HostJoinViewController.swift */,
+				C3050E11203E53B300966243 /* ResultsViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -502,11 +519,14 @@
 				C3EBE4C720113FBC00B44006 /* MessageManager.swift in Sources */,
 				A30F899B202E74B400748E22 /* CMTextField.swift in Sources */,
 				C373C43A2035E34D00616853 /* HostJoinViewController.swift in Sources */,
+				C3050E12203E53B300966243 /* ResultsViewController.swift in Sources */,
 				C373C43C2035EA4400616853 /* LocalServiceManager.swift in Sources */,
+				C3E3A882203E178D00666C5F /* Player.swift in Sources */,
 				C3931DCE2034F1C000C3A9A6 /* LobbyViewController.swift in Sources */,
 				C3EBE49B20113F9400B44006 /* GameViewController.swift in Sources */,
 				C36A61742034FC6400FA3C36 /* Helpers.swift in Sources */,
 				C36A61712034F7D700FA3C36 /* PlayerTableViewCell.swift in Sources */,
+				C3E3A884203E17C100666C5F /* Message.swift in Sources */,
 				C3EBE49920113F9400B44006 /* AppDelegate.swift in Sources */,
 				C3F168862034EF330086AF0B /* HomeViewController.swift in Sources */,
 				A30F899D20301B7B00748E22 /* UIColor+CM.swift in Sources */,
@@ -679,6 +699,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = NE2625R7RX;
 				INFOPLIST_FILE = "Fill In The Blanks/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.codymace.Fill-In-The-Blanks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -695,6 +716,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = NE2625R7RX;
 				INFOPLIST_FILE = "Fill In The Blanks/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.codymace.Fill-In-The-Blanks";
 				PRODUCT_NAME = "$(TARGET_NAME)";

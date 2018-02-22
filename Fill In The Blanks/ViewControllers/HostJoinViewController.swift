@@ -36,6 +36,10 @@ class HostJoinViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        hideAlert()
+    }
     
     func showAlert() {
         alertView.isHidden = false
@@ -76,6 +80,7 @@ class HostJoinViewController: UIViewController {
     }
 
     func proceed() {
+        hideAlert()
         let vc = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "LobbyViewController") as! LobbyViewController
         if hosting {
             LocalServiceManager.shared.host()

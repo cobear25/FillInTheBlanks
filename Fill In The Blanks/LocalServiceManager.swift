@@ -18,7 +18,8 @@ protocol LocalServiceDelegate {
 }
 
 protocol MessagesDelegate {
-    func messageReceived(message: String)
+    func messageReceived(message: Message)
+    func finalMessageReceived(message: Message)
 }
 
 let uniqueId = newId()
@@ -145,10 +146,17 @@ class LocalServiceManager: NSObject {
     }
 
     // send a new message out to the game
-    func sendMessageToPeer(peer: MCPeerID, message: String) {
-        let dict = [EventKey.sendMessage: message]
+    func sendMessageToPeer(peer: MCPeerID, message: Message) {
+        let dict = [EventKey.sendMessage: message.toDict()]
         let data = NSKeyedArchiver.archivedData(withRootObject: dict)
         sendDataToPeers(peers: [peer], data: data, name: "sent message")
+    }
+
+    // sends final message to all peers
+    func sendFinalMessage(message: Message) {
+        let dict = [EventKey.sendFinalMessage: message.toDict()]
+        let data = NSKeyedArchiver.archivedData(withRootObject: dict)
+        sendData(data: data, name: "send final message")
     }
 
     func sendAvatarIndex() {
@@ -163,7 +171,7 @@ extension LocalServiceManager: MCSessionDelegate {
         if peerID.displayName != myPeerId.displayName {
             self.delegate?.connectedDevicesChanged(manager: self, connectedDevices: session.connectedPeers.map { $0.displayName })
             if !session.connectedPeers.contains(peerID) {
-                let when = DispatchTime.now() + 0.3 // change 2 to desired number of seconds
+                let when = DispatchTime.now() + 1.0
                 DispatchQueue.main.asyncAfter(deadline: when) {
                     // send updated name to new peer
                     let dict = [EventKey.updateName: UserDefaults.standard.string(forKey: "displayname") ?? ""]
@@ -186,10 +194,13 @@ extension LocalServiceManager: MCSessionDelegate {
                     print("start game!")
                 case EventKey.sendMessage:
                     print("message: \(v), sent from peer \(peerID)")
-                    messagesDelegate?.messageReceived(message: v as! String)
+                    messagesDelegate?.messageReceived(message: Message(dict: v as! [String : Any]))
                 case EventKey.avatarIndex:
                     // make sure everyone else has your avatar and then update UI
                     self.delegate?.avatarIndexFromPeer(peer: peerID, index: v as! Int)
+                case EventKey.sendFinalMessage:
+                    print("final message \(v) from peer \(peerID)")
+                    messagesDelegate?.finalMessageReceived(message: Message(dict: v as! [String : Any]))
                 default:
                     break
                 }
