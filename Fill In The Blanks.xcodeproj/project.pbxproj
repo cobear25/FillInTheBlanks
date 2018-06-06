@@ -69,7 +69,7 @@
 		C3931DCD2034F1C000C3A9A6 /* LobbyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LobbyViewController.swift; sourceTree = "<group>"; };
 		C3E3A881203E178D00666C5F /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		C3E3A883203E17C100666C5F /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
-		C3EBE49520113F9400B44006 /* Fill In The Blanks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Fill In The Blanks.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C3EBE49520113F9400B44006 /* Message Swap debug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Message Swap debug.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3EBE49820113F9400B44006 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C3EBE49A20113F9400B44006 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		C3EBE49D20113F9400B44006 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -152,7 +152,7 @@
 		C3EBE49620113F9400B44006 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C3EBE49520113F9400B44006 /* Fill In The Blanks.app */,
+				C3EBE49520113F9400B44006 /* Message Swap debug.app */,
 				C3EBE4A920113F9500B44006 /* Fill In The BlanksTests.xctest */,
 				C3EBE4B420113F9500B44006 /* Fill In The BlanksUITests.xctest */,
 			);
@@ -223,9 +223,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		C3EBE49420113F9400B44006 /* Fill In The Blanks */ = {
+		C3EBE49420113F9400B44006 /* Message Swap */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C3EBE4BD20113F9500B44006 /* Build configuration list for PBXNativeTarget "Fill In The Blanks" */;
+			buildConfigurationList = C3EBE4BD20113F9500B44006 /* Build configuration list for PBXNativeTarget "Message Swap" */;
 			buildPhases = (
 				CBA982D172F4DC56694D451C /* [CP] Check Pods Manifest.lock */,
 				C3EBE49120113F9400B44006 /* Sources */,
@@ -238,9 +238,9 @@
 			);
 			dependencies = (
 			);
-			name = "Fill In The Blanks";
+			name = "Message Swap";
 			productName = "Fill In The Blanks";
-			productReference = C3EBE49520113F9400B44006 /* Fill In The Blanks.app */;
+			productReference = C3EBE49520113F9400B44006 /* Message Swap debug.app */;
 			productType = "com.apple.product-type.application";
 		};
 		C3EBE4A820113F9500B44006 /* Fill In The BlanksTests */ = {
@@ -324,7 +324,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				C3EBE49420113F9400B44006 /* Fill In The Blanks */,
+				C3EBE49420113F9400B44006 /* Message Swap */,
 				C3EBE4A820113F9500B44006 /* Fill In The BlanksTests */,
 				C3EBE4B320113F9500B44006 /* Fill In The BlanksUITests */,
 			);
@@ -554,12 +554,12 @@
 /* Begin PBXTargetDependency section */
 		C3EBE4AB20113F9500B44006 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = C3EBE49420113F9400B44006 /* Fill In The Blanks */;
+			target = C3EBE49420113F9400B44006 /* Message Swap */;
 			targetProxy = C3EBE4AA20113F9500B44006 /* PBXContainerItemProxy */;
 		};
 		C3EBE4B620113F9500B44006 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = C3EBE49420113F9400B44006 /* Fill In The Blanks */;
+			target = C3EBE49420113F9400B44006 /* Message Swap */;
 			targetProxy = C3EBE4B520113F9500B44006 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -698,11 +698,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = NE2625R7RX;
+				DISPLAY_NAME = "Msg Swap debug";
 				INFOPLIST_FILE = "Fill In The Blanks/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.codymace.Fill-In-The-Blanks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.codymace.Fill-In-The-Blanks-debug";
+				PRODUCT_NAME = "$(TARGET_NAME) debug";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -715,6 +716,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = NE2625R7RX;
+				DISPLAY_NAME = "$(PRODUCT_NAME)";
 				INFOPLIST_FILE = "Fill In The Blanks/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -807,7 +809,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C3EBE4BD20113F9500B44006 /* Build configuration list for PBXNativeTarget "Fill In The Blanks" */ = {
+		C3EBE4BD20113F9500B44006 /* Build configuration list for PBXNativeTarget "Message Swap" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C3EBE4BE20113F9500B44006 /* Debug */,
